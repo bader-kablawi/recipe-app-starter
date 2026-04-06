@@ -47,14 +47,23 @@ export async function updateRecipe(
 }
 
 export async function deleteRecipe(recipeId: number, image_path?: string) {
-  if (image_path) {
-    await StorageService.remove(image_path);
-  }
+  try {
+    if (image_path) {
+      await StorageService.remove(image_path);
+    }
+    const { error } = await supabase
+      .from("recipes")
+      .delete()
+      .eq("id", recipeId);
 
-  return await supabase
-    .from("recipes")
-    .delete()
-    .eq("id", recipeId);
+    if (error) {
+      return { error };
+    }
+
+    return { data: true, error: null };
+  } catch (err: any) {
+    return { error: err };
+  }
 }
 
 export function getImageUrl(path: string): string {

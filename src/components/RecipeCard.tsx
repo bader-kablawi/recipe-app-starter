@@ -1,4 +1,5 @@
 import type { Recipe } from "../types/recipe";
+import { getImageUrl } from "../services/recipeService";
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -21,8 +22,15 @@ export default function RecipeCard({
   onDelete,
   onToggleFavorite
 }: RecipeCardProps) {
+  const imageUrl = recipe.image_path ? getImageUrl(recipe.image_path) : "/placeholder.png";
+
   return (
     <div className="recipe-card">
+      <img 
+        src={imageUrl} 
+        alt={recipe.title} 
+        style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px 8px 0 0', marginBottom: '16px' }} 
+      />
       <div className="recipe-card-badge">{categoryName}</div>
       <h3 className="recipe-card-title">{recipe.title}</h3>
       <div className="recipe-card-meta">
