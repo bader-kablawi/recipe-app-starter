@@ -7,6 +7,7 @@ export type Recipe = {
     user_id:string;
     owner_email:string;
     created_at?:string;
+    image_path?: string;
 }
 
 export type NewRecipe = {
@@ -16,6 +17,7 @@ export type NewRecipe = {
     category_id: number;
     user_id:string;
     owner_email:string;
+    image_path?: string;
 }
 
 export type RecipeFormData = {
@@ -23,4 +25,5 @@ export type RecipeFormData = {
     description: string;
     prep_time:number | string;
     category_id: string;
+    image?: File;
 }

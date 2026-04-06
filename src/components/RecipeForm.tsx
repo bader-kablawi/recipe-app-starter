@@ -7,8 +7,8 @@ type RecipeFormProps = {
   userId: string;
   userEmail: string;
   editingRecipe: Recipe | null;
-  onAddRecipe: (recipe: NewRecipe) => Promise<boolean>;
-  onEditRecipe: (recipeId: number, recipe: Partial<NewRecipe>) => Promise<boolean>;
+  onAddRecipe: (recipe: NewRecipe, file?: File) => Promise<boolean>;
+  onEditRecipe: (recipeId: number, recipe: Partial<NewRecipe>, file?: File) => Promise<boolean>;
   onCancelEdit: () => void;
   error: string;
   successMessage: string;
@@ -19,6 +19,7 @@ const initialForm: RecipeFormData = {
   description: "",
   prep_time: 0,
   category_id: "",
+  image: undefined,
 };
 
 export default function RecipeForm({
@@ -42,6 +43,7 @@ export default function RecipeForm({
         description: editingRecipe.description,
         prep_time: editingRecipe.prep_time,
         category_id: editingRecipe.category_id.toString(),
+        image: undefined,
       });
       setLocalError("");
     } else {
@@ -76,7 +78,7 @@ export default function RecipeForm({
         description: form.description.trim(),
         prep_time: Number(form.prep_time),
         category_id: Number(form.category_id),
-      });
+         image_path: editingRecipe.image_path,}, form.image);
       if (ok) onCancelEdit();
     } else {
       const recipe: NewRecipe = {
@@ -87,7 +89,7 @@ export default function RecipeForm({
         user_id: userId,
         owner_email: userEmail,
       };
-      const ok = await onAddRecipe(recipe);
+      const ok = await onAddRecipe(recipe, form.image);
       if (ok) setForm(initialForm);
     }
   }
@@ -114,6 +116,13 @@ export default function RecipeForm({
             value={form.description}
             onChange={(e) => updateField("description", e.target.value)}
           />
+        </div>
+        <div className="form-group">
+          <label>Recipe Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => updateField("image", e.target.files?.[0] || undefined)}   />
         </div>
 
         <div style={{ display: "flex", gap: "1.5rem" }}>
